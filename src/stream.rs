@@ -22,12 +22,9 @@ impl<'a> CangjieTokenStream<'a> {
 
 impl<'a> ::tantivy::tokenizer::TokenStream for CangjieTokenStream<'a> {
     fn advance(&mut self) -> bool {
+
         if self.index < self.result.len() {
-            self.index += 1;
-
-            let current_word = self.result[self.index - 1];
-
-            self.offset_from += current_word.len();
+            let current_word = self.result[self.index];
 
             self.token = Token {
                 offset_from: self.offset_from,
@@ -36,6 +33,9 @@ impl<'a> ::tantivy::tokenizer::TokenStream for CangjieTokenStream<'a> {
                 text: current_word.to_string(),
                 position_length: self.result.len(),
             };
+
+            self.index += 1;
+            self.offset_from += current_word.len();
             true
         } else {
             false
